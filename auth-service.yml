@@ -1,10 +1,10 @@
 
 realms:
-  value: "imdae-ms"
+  value: "aio-microservices"
 
 auth:
-  client-id: "imdae-ms-auth"
-  client-secret: "TEDiw5jRJ555w1PIEuR4GYeLPXOevQoT"
+  client-id: "aio-microservices-auth"
+  client-secret: "brUBIjrveR2LQLQElB0ZlgteRlDJgL9R"
 spring:
   zipkin:
     base-url: http://localhost:9411
