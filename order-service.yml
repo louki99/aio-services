@@ -1,4 +1,26 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  health:
+    circuitbreakers:
+      enabled: 'true'
+  endpoint:
+    health:
+      show-details: always
 spring:
+  cloud:
+    stream:
+      output-bindings: notificationEventSupplier
+      bindings:
+        notificationEventSupplier-out-0:
+          destination: notification-events
+  sleuth:
+    integration:
+      enabled: 'true'
+    sampler:
+      probability: '1'
   data:
     mongodb:
       authentication-database: admin
@@ -8,14 +30,33 @@ spring:
       port: ${MONGODB_PORT:27017}
       host: ${MONGODB_DOMAIN:localhost}
   zipkin:
-    base-url: http://localhost:9411
-  sleuth:
-    sampler:
-      probability: '1.0'
+    base-url: http://localhost:9411/
+  application:
+    name: order-service
+resilience4j:
+  circuitbreaker:
+    instances:
+      inventory:
+        failureRateThreshold: '50'
+        permittedNumberOfCallsInHalfOpenState: '3'
+        automaticTransitionFromOpenToHalfOpenEnabled: 'true'
+        event-consumer-buffer-size: '10'
+        registerHealthIndicator: 'true'
+        waitDurationInOpenState: 5s
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: '5'
+  retry:
+    instances:
+      inventory:
+        wait-duration: 5s
+        max-attempts: '3'
+  timelimiter:
+    instances:
+      inventory:
+        timeout-duration: 3s
+server:
+  port: '8081'
 eureka:
   client:
     serviceUrl:
       defaultZone: http://eureka:password@localhost:8761/eureka
-
-test:
-  name: "hello micro service updated config data againe"
